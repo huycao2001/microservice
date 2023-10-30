@@ -14,9 +14,9 @@ public class SqsService {
     @SqsListener(value = "InventoryQueue")
     void receiveMessage(String message) throws Exception {
         String key = processS3Event(message);
-      log.info("Receive message from queue " + message);
-      log.info("Object uploaded file name : " + key);
-      // TODO : What to do next ?
+        log.info("Receive message from queue " + message);
+        log.info("Object uploaded file name : " + key);
+      // TODO : Download object and add to dynamo db
     }
 
 
