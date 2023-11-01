@@ -1,5 +1,6 @@
 package com.kms.bookservice.errors;
 
+import com.kms.bookservice.entities.dto.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -19,10 +20,15 @@ import java.util.stream.Collectors;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    private final int FAIL_ERROR_CODE = -1;
+
+    private final int SUCCESS_ERROR_CODE = 0;
     @ExceptionHandler(Exception.class)
-    ProblemDetail handleGlobalError(Exception e) {
-        log.error("GlobalExceptionHandler ", e);
-        return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    ResponseEntity<ResponseDTO> handleUnexpectedException(Exception ex) {
+        log.error("Global exception " + ex.getMessage() );
+        String message = ex.getLocalizedMessage();
+        ResponseDTO responseDTO = new ResponseDTO(FAIL_ERROR_CODE, message, null);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
     }
 
 

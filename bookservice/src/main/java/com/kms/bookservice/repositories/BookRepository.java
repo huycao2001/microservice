@@ -1,7 +1,7 @@
 package com.kms.bookservice.repositories;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.kms.bookservice.entities.Book;
+import com.kms.bookservice.entities.models.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

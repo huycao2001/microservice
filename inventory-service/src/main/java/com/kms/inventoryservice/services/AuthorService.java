@@ -2,6 +2,7 @@ package com.kms.inventoryservice.services;
 
 
 
+import com.kms.inventoryservice.error.ObjectNotFoundException;
 import com.kms.inventoryservice.models.entities.Author;
 import com.kms.inventoryservice.repositories.AuthorRepository;
 import com.kms.inventoryservice.repositories.BookRepository;
@@ -29,9 +30,29 @@ public class AuthorService {
     public Author getByUuid(String uuid) throws Exception {
         Author result =  authorRepository.getByUuid(uuid);
         if(result == null){
-            throw new Exception("Author can not be found");
+            throw new ObjectNotFoundException("Author can not be found with uuid " + uuid);
         }
+        return result;
+    }
 
+
+    public Author updateAuthor(Author author) throws Exception {
+        Author result =  authorRepository.updateAuthor(author);
+        if(result == null){
+            throw new Exception("Can not update author");
+        }
+        return result;
+    }
+
+    public Author deleteAuthor(String authorUuid) throws Exception {
+        Author targetAuthor = authorRepository.getByUuid(authorUuid);
+        if(targetAuthor == null){
+            throw  new Exception("Author can not be found");
+        }
+        Author result =  authorRepository.deleteAuthor(authorUuid);
+        if(result == null){
+            throw new Exception("Can not delete author");
+        }
         return result;
     }
 }

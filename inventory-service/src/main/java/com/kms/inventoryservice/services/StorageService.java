@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.ByteArrayInputStream;
@@ -40,6 +43,17 @@ public class StorageService {
         }catch (Exception exception){
             throw new Exception(exception.getLocalizedMessage());
         }
+    }
+
+    public byte[] getObject(String fileName) throws Exception{
+        GetObjectRequest objectRequest = GetObjectRequest
+                .builder()
+                .key(fileName)
+                .bucket(bucketName)
+                .build();
+
+        ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(objectRequest);
+        return objectBytes.asByteArray();
     }
 
 

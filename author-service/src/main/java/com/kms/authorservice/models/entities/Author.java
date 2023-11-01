@@ -1,4 +1,4 @@
-package com.kms.authorservice.models;
+package com.kms.authorservice.models.entities;
 
 
 import lombok.AllArgsConstructor;

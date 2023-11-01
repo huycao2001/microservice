@@ -1,7 +1,8 @@
 package com.kms.authorservice.clients;
 
 
-import com.kms.authorservice.models.Author;
+import com.kms.authorservice.models.dto.ResponseDTO;
+import com.kms.authorservice.models.entities.Author;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,9 +14,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface InventoryClient {
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<Author> saveBook(@RequestBody Author book);
+    ResponseEntity<ResponseDTO<Author>> saveAuthor(@RequestBody Author author);
 
 
     @RequestMapping(method = RequestMethod.GET, value = {"/{authorUuid}"})
-    ResponseEntity<Author> getAuthorByUuid(@PathVariable String authorUuid);
+    ResponseEntity<ResponseDTO<Author>> getAuthorByUuid(@PathVariable String authorUuid);
+
+
+    @RequestMapping(method = RequestMethod.DELETE, value = {"/{authorUuid}"})
+    ResponseEntity<ResponseDTO<Author>> deleteAuthor(@PathVariable String authorUuid);
+
+    @RequestMapping(method = RequestMethod.PUT)
+    ResponseEntity<ResponseDTO<Author>> updateAuthor(@RequestBody Author author);
 }

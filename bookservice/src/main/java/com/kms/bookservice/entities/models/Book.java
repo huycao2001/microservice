@@ -1,4 +1,4 @@
-package com.kms.bookservice.entities;
+package com.kms.bookservice.entities.models;
 
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
@@ -20,13 +20,14 @@ public class Book {
     private String uuid;
 
     @DynamoDBAttribute
-    @NotBlank(message = "title cannot be blank")
     private String title;
 
     @DynamoDBAttribute
     private String isbn;
 
     @DynamoDBAttribute
-    @NotBlank(message = "authorUuid cannot be blank")
     private String authorUuid;
+
+
+
 }

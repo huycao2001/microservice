@@ -9,14 +9,15 @@ import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
 
+import java.util.List;
+
+
 @Repository
 public class BookRepository {
     @Autowired
     DynamoDbEnhancedClient dynamoDbEnhancedClient;
 
-
-
-   public Book save(Book book){
+   public Book save(Book book) throws Exception{
         DynamoDbTable<Book> bookTable = dynamoDbEnhancedClient.table("books", TableSchema.fromBean(Book.class));
         bookTable.putItem(book);
         return book;
@@ -28,6 +29,13 @@ public class BookRepository {
        return bookTable.getItem(Key.builder().partitionValue(uuid).build());
 
    }
+
+
+    public List<Book> getAllBooks() throws Exception {
+        DynamoDbTable<Book> bookTable = dynamoDbEnhancedClient.table("books", TableSchema.fromBean(Book.class));
+        List<Book> books = bookTable.scan().items().stream().toList();
+        return books;
+    }
 
 
 }

@@ -1,4 +1,5 @@
 package com.kms.inventoryservice.error;
+import com.kms.inventoryservice.models.dto.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -18,10 +19,15 @@ import java.util.stream.Collectors;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private final int FAIL_ERROR_CODE = -1;
+
+    private final int SUCCESS_ERROR_CODE = 0;
     @ExceptionHandler(Exception.class)
-    ProblemDetail handleGlobalError(Exception e) {
-        log.error("GlobalExceptionHandler ", e);
-        return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    ResponseEntity<ResponseDTO> handleUnexpectedException(Exception ex) {
+        String message = ex.getLocalizedMessage();
+        ResponseDTO responseDTO = new ResponseDTO(FAIL_ERROR_CODE, message, null);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
     }
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -40,5 +46,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(problemDetail);
+    }
+
+
+    @ExceptionHandler(value = ObjectNotFoundException.class)
+    public ResponseEntity<ResponseDTO> baseExceptionHandler(ObjectNotFoundException ex){
+        log.error("Object not found " + ex.getLocalizedMessage());
+        String message = ex.getLocalizedMessage();
+        ResponseDTO responseDTO = new ResponseDTO(FAIL_ERROR_CODE, message, null);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
     }
 }

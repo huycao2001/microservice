@@ -2,6 +2,7 @@ package com.kms.inventoryservice.services;
 
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -10,13 +11,19 @@ import com.fasterxml.jackson.databind.JsonNode;
 @Service
 public class SqsService {
 
+    @Autowired
+    StorageService storageService;
+
+    @Autowired
+    CSVService csvService;
 
     @SqsListener(value = "InventoryQueue")
     void receiveMessage(String message) throws Exception {
         String key = processS3Event(message);
         log.info("Receive message from queue " + message);
         log.info("Object uploaded file name : " + key);
-      // TODO : Download object and add to dynamo db
+        byte[] bytes = storageService.getObject(key);
+        csvService.processCSV(bytes);
     }
 
 

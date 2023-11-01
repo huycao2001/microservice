@@ -25,4 +25,15 @@ public class AuthorRepository {
         DynamoDbTable<Author> authorTable = dynamoDbEnhancedClient.table("authors", TableSchema.fromBean(Author.class));
         return authorTable.getItem(Key.builder().partitionValue(authorUuid).build());
     }
+
+    public Author updateAuthor(Author author){
+        DynamoDbTable<Author> authorTable = dynamoDbEnhancedClient.table("authors", TableSchema.fromBean(Author.class));
+        return authorTable.updateItem(author);
+    }
+
+
+    public Author deleteAuthor(String authorUuid){
+        DynamoDbTable<Author> authorTable = dynamoDbEnhancedClient.table("authors", TableSchema.fromBean(Author.class));
+        return authorTable.deleteItem(Key.builder().partitionValue(authorUuid).build());
+    }
 }
