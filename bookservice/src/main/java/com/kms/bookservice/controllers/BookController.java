@@ -3,6 +3,7 @@ package com.kms.bookservice.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kms.bookservice.clients.InventoryClient;
+import com.kms.bookservice.entities.dto.BookDetailDTO;
 import com.kms.bookservice.entities.dto.CreateBookRequestDTO;
 import com.kms.bookservice.entities.dto.ResponseDTO;
 import com.kms.bookservice.entities.models.Book;
@@ -52,8 +53,8 @@ public class BookController {
     }
 
     @GetMapping(value = "/{uuid}")
-    public ResponseEntity<ResponseDTO<Book>> getBookByUuid(@PathVariable String uuid) throws JsonProcessingException {
-            ResponseEntity<ResponseDTO<Book>> response = null;
+    public ResponseEntity<ResponseDTO<BookDetailDTO>> getBookByUuid(@PathVariable String uuid) throws JsonProcessingException {
+            ResponseEntity<ResponseDTO<BookDetailDTO>> response = null;
             try{
                 log.info("Call get book by uuid");
                 response = inventoryClient.getBookByUuid(uuid);
@@ -61,7 +62,7 @@ public class BookController {
             }catch(FeignException exception){
                 exception.contentUTF8();
                 log.info("Exception : " + exception.contentUTF8());
-                ResponseDTO<Book> responseDTO = objectMapper.readValue(exception.contentUTF8(), ResponseDTO.class);
+                ResponseDTO<BookDetailDTO> responseDTO = objectMapper.readValue(exception.contentUTF8(), ResponseDTO.class);
                 response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
             }
             return response;
@@ -69,15 +70,15 @@ public class BookController {
 
 
     @GetMapping
-    public ResponseEntity<ResponseDTO<List<Book>>> getAllBooks() throws Exception {
-        ResponseEntity<ResponseDTO<List<Book>>> response = null;
+    public ResponseEntity<ResponseDTO<List<BookDetailDTO>>> getAllBooks() throws Exception {
+        ResponseEntity<ResponseDTO<List<BookDetailDTO>>> response = null;
         try{
 
             response =  inventoryClient.getAllBooks();
         }catch(FeignException exception){
             exception.contentUTF8();
             log.info("Exception : " + exception.contentUTF8());
-            ResponseDTO<List<Book>> responseDTO = objectMapper.readValue(exception.contentUTF8(), ResponseDTO.class);
+            ResponseDTO<List<BookDetailDTO>> responseDTO = objectMapper.readValue(exception.contentUTF8(), ResponseDTO.class);
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
         }
         return response;
