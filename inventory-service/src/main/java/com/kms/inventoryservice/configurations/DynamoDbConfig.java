@@ -1,4 +1,4 @@
-package com.kms.inventoryservice.configuration;
+package com.kms.inventoryservice.configurations;
 
 
 import org.springframework.context.annotation.Configuration;

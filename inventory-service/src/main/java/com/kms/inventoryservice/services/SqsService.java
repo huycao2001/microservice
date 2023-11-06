@@ -34,6 +34,7 @@ public class SqsService {
             String objectKey = s3Event.get("Records").get(0).get("s3").get("object").get("key").asText();
             return objectKey;
         } catch (Exception e) {
+            log.error("Error when extracting the file name from the queue message !");
             throw new Exception(e.getMessage());
         }
     }

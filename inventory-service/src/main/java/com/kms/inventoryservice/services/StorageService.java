@@ -1,5 +1,6 @@
 package com.kms.inventoryservice.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Service
+@Slf4j
 public class StorageService {
     @Autowired
     private S3Client s3Client;
@@ -25,9 +27,12 @@ public class StorageService {
     private String bucketName;
 
     public void createBucket(){
-        CreateBucketRequest bucketRequest = CreateBucketRequest.builder().bucket("huybcao-bucket").build();
-
-        s3Client.createBucket(bucketRequest);
+        try{
+            CreateBucketRequest bucketRequest = CreateBucketRequest.builder().bucket(bucketName).build();
+            s3Client.createBucket(bucketRequest);
+        }catch (Exception exception){
+            log.error("Error when creating bucket " + bucketName, exception);
+        }
     }
 
     public String uploadObject(MultipartFile multipartFile) throws Exception {
@@ -41,19 +46,25 @@ public class StorageService {
             s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, bytes.length));
             return "Object uploaded successfully";
         }catch (Exception exception){
+            log.error("Error when uploading file : " + multipartFile.getOriginalFilename(), exception);
             throw new Exception(exception.getLocalizedMessage());
         }
     }
 
     public byte[] getObject(String fileName) throws Exception{
-        GetObjectRequest objectRequest = GetObjectRequest
-                .builder()
-                .key(fileName)
-                .bucket(bucketName)
-                .build();
+        try{
+            GetObjectRequest objectRequest = GetObjectRequest
+                    .builder()
+                    .key(fileName)
+                    .bucket(bucketName)
+                    .build();
 
-        ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(objectRequest);
-        return objectBytes.asByteArray();
+            ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(objectRequest);
+            return objectBytes.asByteArray();
+        }catch (Exception exception){
+            log.error("Error when downloading file : " + fileName, exception);
+            throw new Exception("Error getting the file : " + fileName);
+        }
     }
 
 

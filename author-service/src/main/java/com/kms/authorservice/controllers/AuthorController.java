@@ -3,8 +3,9 @@ package com.kms.authorservice.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kms.authorservice.clients.InventoryClient;
-import com.kms.authorservice.models.dto.ResponseDTO;
+import com.kms.authorservice.models.dtos.ResponseDTO;
 import com.kms.authorservice.models.entities.Author;
+import com.kms.authorservice.services.AuthorService;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,62 +32,28 @@ public class AuthorController {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    AuthorService authorService;
+
     @PostMapping
     public ResponseEntity<ResponseDTO<Author>> save(@RequestBody @Validated Author author) throws Exception {
-        ResponseEntity<ResponseDTO<Author>> response = null;
-        try{
-            response = inventoryClient.saveAuthor(author);
-        }catch(FeignException exception){
-            exception.contentUTF8();
-            log.info("Exception : " + exception.contentUTF8());
-            ResponseDTO<Author> responseDTO = objectMapper.readValue(exception.contentUTF8(), ResponseDTO.class);
-            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
-        }
-        return response;
+        return authorService.save(author);
     }
 
     @GetMapping(value = "/{authorUuid}")
-    public ResponseEntity<ResponseDTO<Author>> getBookByUuid(@PathVariable String authorUuid) throws Exception {
-        ResponseEntity<ResponseDTO<Author>> response = null;
-        try{
-            response = inventoryClient.getAuthorByUuid(authorUuid);
-        }catch(FeignException exception){
-            exception.contentUTF8();
-            log.info("Exception : " + exception.contentUTF8());
-            ResponseDTO<Author> responseDTO = objectMapper.readValue(exception.contentUTF8(), ResponseDTO.class);
-            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
-        }
-        return response;
+    public ResponseEntity<ResponseDTO<Author>> getAuthorByUuid(@PathVariable String authorUuid) throws Exception {
+        return authorService.getAuthorByUuid(authorUuid);
     }
 
 
     @PutMapping
     public ResponseEntity<ResponseDTO<Author>> updateAuthor(@RequestBody @Validated Author author) throws Exception {
-        ResponseEntity<ResponseDTO<Author>> response = null;
-        try{
-            response = inventoryClient.updateAuthor(author);
-        }catch(FeignException exception){
-            exception.contentUTF8();
-            log.info("Exception : " + exception.contentUTF8());
-            ResponseDTO<Author> responseDTO = objectMapper.readValue(exception.contentUTF8(), ResponseDTO.class);
-            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
-        }
-        return response;
+        return authorService.updateAuthor(author);
     }
 
     @DeleteMapping(value = "/{authorUuid}")
     public ResponseEntity<ResponseDTO<Author>> deleteAuthor(@PathVariable String authorUuid) throws Exception {
-        ResponseEntity<ResponseDTO<Author>> response = null;
-        try{
-            response = inventoryClient.deleteAuthor(authorUuid);
-        }catch(FeignException exception){
-            exception.contentUTF8();
-            log.info("Exception : " + exception.contentUTF8());
-            ResponseDTO<Author> responseDTO = objectMapper.readValue(exception.contentUTF8(), ResponseDTO.class);
-            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
-        }
-        return response;
-
+        return authorService.deleteAuthor(authorUuid);
     }
 
 }

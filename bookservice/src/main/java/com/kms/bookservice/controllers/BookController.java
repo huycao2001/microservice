@@ -40,48 +40,17 @@ public class BookController {
 
     @PostMapping
     public ResponseEntity<ResponseDTO<Book>> save(@RequestBody @Validated CreateBookRequestDTO createBookRequestDTO) throws Exception {
-        ResponseEntity<ResponseDTO<Book>> response = null;
-        try{
-            response = inventoryClient.saveBook(createBookRequestDTO);
-        }catch(FeignException exception){
-            exception.contentUTF8();
-            log.info("Exception : " + exception.contentUTF8());
-            ResponseDTO<Book> responseDTO = objectMapper.readValue(exception.contentUTF8(), ResponseDTO.class);
-            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
-        }
-        return response;
+        return bookService.save(createBookRequestDTO);
     }
 
-    @GetMapping(value = "/{uuid}")
-    public ResponseEntity<ResponseDTO<BookDetailDTO>> getBookByUuid(@PathVariable String uuid) throws JsonProcessingException {
-            ResponseEntity<ResponseDTO<BookDetailDTO>> response = null;
-            try{
-                log.info("Call get book by uuid");
-                response = inventoryClient.getBookByUuid(uuid);
-
-            }catch(FeignException exception){
-                exception.contentUTF8();
-                log.info("Exception : " + exception.contentUTF8());
-                ResponseDTO<BookDetailDTO> responseDTO = objectMapper.readValue(exception.contentUTF8(), ResponseDTO.class);
-                response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
-            }
-            return response;
+    @GetMapping(value = "/{bookUuid}")
+    public ResponseEntity<ResponseDTO<BookDetailDTO>> getBookByUuid(@PathVariable String bookUuid) throws JsonProcessingException {
+        return bookService.getBookByUuid(bookUuid);
     }
 
 
     @GetMapping
     public ResponseEntity<ResponseDTO<List<BookDetailDTO>>> getAllBooks() throws Exception {
-        ResponseEntity<ResponseDTO<List<BookDetailDTO>>> response = null;
-        try{
-
-            response =  inventoryClient.getAllBooks();
-        }catch(FeignException exception){
-            exception.contentUTF8();
-            log.info("Exception : " + exception.contentUTF8());
-            ResponseDTO<List<BookDetailDTO>> responseDTO = objectMapper.readValue(exception.contentUTF8(), ResponseDTO.class);
-            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
-        }
-        return response;
+        return bookService.getAllBooks();
     }
-
 }

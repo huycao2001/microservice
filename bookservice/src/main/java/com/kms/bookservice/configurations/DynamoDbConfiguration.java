@@ -1,4 +1,4 @@
-package com.kms.bookservice.configuration;
+package com.kms.bookservice.configurations;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

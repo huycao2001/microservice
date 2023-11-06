@@ -1,6 +1,6 @@
 package com.kms.inventoryservice.services;
 
-import com.kms.inventoryservice.error.ObjectNotFoundException;
+import com.kms.inventoryservice.errors.ObjectNotFoundException;
 import com.kms.inventoryservice.models.dto.BookDetailDTO;
 import com.kms.inventoryservice.models.entities.Author;
 import com.kms.inventoryservice.models.entities.Book;

@@ -17,22 +17,24 @@ public class BookRepository {
     @Autowired
     DynamoDbEnhancedClient dynamoDbEnhancedClient;
 
+    private static String BOOK_TABLE = "books";
+
    public Book save(Book book) throws Exception{
-        DynamoDbTable<Book> bookTable = dynamoDbEnhancedClient.table("books", TableSchema.fromBean(Book.class));
+        DynamoDbTable<Book> bookTable = dynamoDbEnhancedClient.table(BOOK_TABLE,TableSchema.fromBean(Book.class));
         bookTable.putItem(book);
         return book;
 
    }
 
    public Book getByUuid(String uuid) throws Exception {
-       DynamoDbTable<Book> bookTable = dynamoDbEnhancedClient.table("books", TableSchema.fromBean(Book.class));
+       DynamoDbTable<Book> bookTable = dynamoDbEnhancedClient.table(BOOK_TABLE,TableSchema.fromBean(Book.class));
        return bookTable.getItem(Key.builder().partitionValue(uuid).build());
 
    }
 
 
     public List<Book> getAllBooks() throws Exception {
-        DynamoDbTable<Book> bookTable = dynamoDbEnhancedClient.table("books", TableSchema.fromBean(Book.class));
+        DynamoDbTable<Book> bookTable = dynamoDbEnhancedClient.table(BOOK_TABLE,TableSchema.fromBean(Book.class));
         List<Book> books = bookTable.scan().items().stream().toList();
         return books;
     }

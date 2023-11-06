@@ -1,0 +1,30 @@
+version: '3'
+services:
+  inventory-service:
+    build: ./inventory-service
+    container_name: inventory-service-container
+    # network_mode: host
+    restart: on-failure:5
+    ports:
+      - 8081:8081
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+
+  book-service:
+    image: book-service-image
+    container_name: book-service-container
+    # network_mode: host
+    restart: on-failure:5
+    ports:
+      - 8080:8080
+
+
+  author-service:
+    image: author-service-image
+    container_name: author-service-container
+    # network_mode: host
+    restart: on-failure:5
+    ports:
+      - 8082:8082

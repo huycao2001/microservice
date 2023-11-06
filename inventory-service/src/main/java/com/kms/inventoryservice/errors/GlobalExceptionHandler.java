@@ -1,4 +1,4 @@
-package com.kms.inventoryservice.error;
+package com.kms.inventoryservice.errors;
 import com.kms.inventoryservice.models.dto.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

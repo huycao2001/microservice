@@ -1,4 +1,4 @@
-package com.kms.authorservice.models.dto;
+package com.kms.authorservice.models.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

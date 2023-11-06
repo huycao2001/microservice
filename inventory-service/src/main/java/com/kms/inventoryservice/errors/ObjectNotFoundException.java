@@ -1,4 +1,4 @@
-package com.kms.inventoryservice.error;
+package com.kms.inventoryservice.errors;
 
 public class ObjectNotFoundException extends RuntimeException{
     public ObjectNotFoundException(String message){
