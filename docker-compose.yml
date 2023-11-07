@@ -2,6 +2,7 @@ version: '3'
 services:
   inventory-service:
     build: ./inventory-service
+    image: inventory-service-image
     container_name: inventory-service-container
     # network_mode: host
     restart: on-failure:5
@@ -13,6 +14,7 @@ services:
       - AWS_REGION=${AWS_REGION}
 
   book-service:
+    build: ./bookservice
     image: book-service-image
     container_name: book-service-container
     # network_mode: host
@@ -22,6 +24,7 @@ services:
 
 
   author-service:
+    build: ./author-service
     image: author-service-image
     container_name: author-service-container
     # network_mode: host
